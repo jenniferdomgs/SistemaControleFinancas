@@ -10,24 +10,44 @@ public class Conta implements Relatoriavel {
     public Conta() {
         this.transacoes = new ArrayList<>();
         this.metas = new ArrayList<>();
+        this.saldoAtual = 0.0;
     }
+
+    // atualiza o saldo automaticamente ao adicionar/remover
 
     public void addTransacao(Transacao t) {
         transacoes.add(t);
+        calcularSaldo();
     }
 
     public void removerTransacao(Transacao t) {
         transacoes.remove(t);
+        calcularSaldo();
     }
 
     public double calcularSaldo() {
-
-        return saldoAtual;
+        double novoSaldo = 0.0;
+        for (Transacao t : transacoes) {
+            // verifica se a transação é despesa ou receita
+            if (t instanceof Receita) {
+                novoSaldo += t.getValor();
+            } else if (t instanceof Despesa) {
+                novoSaldo -= t.getValor();
+            } else {
+                novoSaldo += t.getValor();
+            }
+        }
+        this.saldoAtual = novoSaldo;
+        return this.saldoAtual;
     }
 
     @Override
     public void gerarRelatorio() {
-
+        System.out.println("=== Relatório da sua conta ===");
+        System.out.println("Saldo Atual: R$ " + saldoAtual);
+        System.out.println("Total de Transações: " + transacoes.size());
+        System.out.println("Total de Metas: " + metas.size());
+        System.out.println("--------------------------");
     }
 
     public double getSaldoAtual() {
